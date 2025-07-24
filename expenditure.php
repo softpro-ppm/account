@@ -198,7 +198,7 @@ if (!$result) {
       <div class="p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h5>Expenditure Records</h5>
-          <a href="add-expenditure.php" class="btn btn-success btn-sm"><i class="bi bi-plus-circle"></i> Add New Expenditure 1</a>
+          <a href="add-expenditure.php" class="btn btn-success btn-sm"><i class="bi bi-plus-circle"></i> Add New Expenditure </a>
         </div>
 
         <?php
