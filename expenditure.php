@@ -10,7 +10,7 @@ if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'manager') {
 }
 
 // Query to fetch expenditure records ordered by most recent first
-// Order by: created_at DESC (newest entries first), date DESC (recent dates first), id DESC (newest IDs first)
+// Order by: date DESC (recent dates first), id DESC (newest IDs first)
 $sql = "
 SELECT 
     id, 
@@ -25,7 +25,7 @@ SELECT
     created_at 
 FROM 
     expenditures
-ORDER BY created_at DESC, date DESC, id DESC";
+ORDER BY date DESC, id DESC";
 $result = $conn->query($sql);
 if (!$result) {
     die("Error executing query: " . $conn->error);
@@ -292,10 +292,7 @@ if (!$result) {
               orderable: false, 
               searchable: false,
               render: function (data, type, row, meta) {
-                if (type === 'display') {
-                  return meta.row + meta.settings._iDisplayStart + 1;
-                }
-                return data;
+                return meta.row + meta.settings._iDisplayStart + 1;
               }
             },
             { targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], className: 'text-center' }
@@ -317,6 +314,8 @@ if (!$result) {
           },
           order: [[1, 'desc']], // Sort by date column (index 1) in descending order by default
           destroy: true, // Allow the table to be reinitialized
+          processing: false,
+          serverSide: false,
           dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
                '<"row"<"col-sm-12"tr>>' +
                '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'

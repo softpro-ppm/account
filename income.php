@@ -16,7 +16,7 @@ $sql = "SELECT
         created_at,
         updated_at
         FROM income 
-        ORDER BY created_at DESC, date DESC, id DESC";
+        ORDER BY date DESC, id DESC";
 
 $result = $conn->query($sql);
 
@@ -227,7 +227,6 @@ if (!$result) {
             <tbody>
               <?php
               if ($result && $result->num_rows > 0) {
-                  $sl_no = 1;
                   while ($row = $result->fetch_assoc()) {
                       $formatted_date = date("d-m-Y", strtotime($row['date']));
                       $formatted_created_at = date("d-m-Y H:i:s", strtotime($row['created_at']));
@@ -253,7 +252,6 @@ if (!$result) {
                               <a href='include/delete-income.php?id=" . $row['id'] . "' class='btn btn-sm btn-danger' onclick='return confirm(\"Are you sure you want to delete this record?\")'><i class='bi bi-trash'></i></a>
                             </td>";
                       echo "</tr>";
-                      $sl_no++;
                   }
               } else {
                   echo "<tr><td colspan='15' class='text-center'>No records found</td></tr>";
@@ -284,36 +282,34 @@ if (!$result) {
         
         // Initialize the table
         var table = $('#incomeTable').DataTable({
-          "processing": true,
-          "order": [[1, 'desc']], // Order by date column (index 1) in descending order
-          "columnDefs": [
+          processing: false,
+          serverSide: false,
+          order: [[1, 'desc']], // Order by date column (index 1) in descending order
+          columnDefs: [
             { 
-              "targets": 0,
-              "searchable": false,
-              "orderable": false,
-              "render": function (data, type, row, meta) {
-                if (type === 'display') {
-                  return meta.row + meta.settings._iDisplayStart + 1;
-                }
-                return data;
+              targets: 0,
+              searchable: false,
+              orderable: false,
+              render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
               }
             },
-            { "orderable": false, "targets": 11 } // Action column
+            { orderable: false, targets: 11 } // Action column
           ],
-          "pageLength": 10,
-          "dom": '<"top"lf>rt<"bottom"ip><"clear">',
-          "language": {
-            "lengthMenu": "_MENU_ records per page",
-            "zeroRecords": "No matching records found",
-            "info": "Showing _START_ to _END_ of _TOTAL_ entries",
-            "infoEmpty": "No records available",
-            "infoFiltered": "(filtered from _MAX_ total records)",
-            "search": "Search:",
-            "paginate": {
-              "first": "First",
-              "last": "Last",
-              "next": "Next",
-              "previous": "Previous"
+          pageLength: 10,
+          dom: '<"top"lf>rt<"bottom"ip><"clear">',
+          language: {
+            lengthMenu: "_MENU_ records per page",
+            zeroRecords: "No matching records found",
+            info: "Showing _START_ to _END_ of _TOTAL_ entries",
+            infoEmpty: "No records available",
+            infoFiltered: "(filtered from _MAX_ total records)",
+            search: "Search:",
+            paginate: {
+              first: "First",
+              last: "Last",
+              next: "Next",
+              previous: "Previous"
             }
           }
         });
