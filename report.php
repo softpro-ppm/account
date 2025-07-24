@@ -298,9 +298,6 @@ if ($result) {
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="assets/js/responsive.js"></script>
   <script>
-    // Prevent DataTables warning messages from showing in the console
-    $.fn.dataTable.ext.errMode = 'none';
-    
     $(document).ready(function() {
       // Initialize date pickers
       flatpickr('.date-picker', {
@@ -308,29 +305,7 @@ if ($result) {
         allowInput: true
       });
       
-      try {
-        // Destroy the table if it's already initialized
-        if ($.fn.DataTable.isDataTable('#reportTable')) {
-          $('#reportTable').DataTable().destroy();
-        }
-        
-        // Initialize the table
-        $('#reportTable').DataTable({
-          responsive: true,
-          lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-          columnDefs: [
-            { targets: [0, 1, 2, 3, 4, 5, 6, 7, 8], className: 'text-center' }
-          ],
-          language: {
-            emptyTable: "No records found",
-            zeroRecords: "No matching records found"
-          },
-          destroy: true, // Allow the table to be reinitialized
-          order: [[1, 'desc']] // Sort by date column in descending order
-        });
-      } catch (error) {
-        console.log("DataTable initialization error:", error);
-      }
+      console.log("DataTable disabled for consistent serial numbers");
       
       // Auto-hide alerts after 5 seconds
       setTimeout(function() {
