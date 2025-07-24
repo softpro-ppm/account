@@ -272,58 +272,8 @@ if (!$result) {
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
   <script src="assets/js/responsive.js"></script>
   <script>
-    // Prevent DataTables warning messages from showing in the console
-    $.fn.dataTable.ext.errMode = 'none';
-    
     $(document).ready(function() {
-      console.log("Initializing income table...");
-      
-      try {
-        // Destroy the table if it's already initialized
-        if ($.fn.DataTable.isDataTable('#incomeTable')) {
-          console.log("Destroying existing table...");
-          $('#incomeTable').DataTable().destroy();
-        }
-        
-        // Initialize the table
-        var table = $('#incomeTable').DataTable({
-          processing: false,
-          serverSide: false,
-          order: [[1, 'desc']], // Order by date column (index 1) in descending order
-          columnDefs: [
-            { 
-              targets: 0,
-              searchable: false,
-              orderable: false
-            },
-            { orderable: false, targets: 11 } // Action column
-          ],
-          pageLength: 10,
-          drawCallback: function(settings) {
-            console.log("Table drawn, rows:", settings.fnRecordsDisplay());
-          },
-          dom: '<"top"lf>rt<"bottom"ip><"clear">',
-          language: {
-            lengthMenu: "_MENU_ records per page",
-            zeroRecords: "No matching records found",
-            info: "Showing _START_ to _END_ of _TOTAL_ entries",
-            infoEmpty: "No records available",
-            infoFiltered: "(filtered from _MAX_ total records)",
-            search: "Search:",
-            paginate: {
-              first: "First",
-              last: "Last",
-              next: "Next",
-              previous: "Previous"
-            }
-          }
-        });
-        
-        console.log("Table initialized successfully");
-        
-      } catch (error) {
-        console.error("DataTable initialization error:", error);
-      }
+      console.log("DataTable disabled for testing serial numbers");
       
       // Auto-hide alerts after 5 seconds
       setTimeout(function() {
