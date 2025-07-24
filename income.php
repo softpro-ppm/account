@@ -16,7 +16,7 @@ $sql = "SELECT
         created_at,
         updated_at
         FROM income 
-        ORDER BY date DESC, id DESC";
+        ORDER BY created_at DESC, date DESC, id DESC";
 
 $result = $conn->query($sql);
 
