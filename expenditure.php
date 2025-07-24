@@ -232,6 +232,7 @@ if (!$result) {
             <tbody>
               <?php
               if ($result && $result->num_rows > 0) {
+                  $serial_no = 1;
                   while ($row = $result->fetch_assoc()) {
                       $formatted_date = date("d-m-Y", strtotime($row['date']));
                       $status = ($row['balance'] == 0)
@@ -239,7 +240,7 @@ if (!$result) {
                           : "<span class='badge bg-danger'><i class='bi bi-x-circle'></i> Pending</span>";
 
                       echo "<tr>";
-                      echo "<td></td>";
+                      echo "<td>" . $serial_no . "</td>";
                       echo "<td>" . htmlspecialchars($formatted_date) . "</td>";
                       echo "<td>" . htmlspecialchars($row['name']) . "</td>";
                       echo "<td>" . htmlspecialchars($row['description']) . "</td>";
@@ -254,6 +255,7 @@ if (!$result) {
                               <a href='include/delete-expenditure.php?id=" . $row['id'] . "' class='btn btn-sm btn-danger' onclick='return confirm(\"Are you sure you want to delete this record?\")'>Delete</a>
                             </td>";
                       echo "</tr>";
+                      $serial_no++;
                   }
               } else {
                   echo "<tr><td colspan='11' class='text-center'>No records found</td></tr>";
@@ -276,24 +278,24 @@ if (!$result) {
     $.fn.dataTable.ext.errMode = 'none';
     
     $(document).ready(function() {
+      console.log("Initializing expenditure table...");
+      
       try {
         // Destroy the table if it's already initialized
         if ($.fn.DataTable.isDataTable('#expenditureTable')) {
+          console.log("Destroying existing table...");
           $('#expenditureTable').DataTable().destroy();
         }
         
         // Initialize the table
-        $('#expenditureTable').DataTable({
+        var table = $('#expenditureTable').DataTable({
           responsive: true,
           lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
           columnDefs: [
             { 
               targets: 0, 
               orderable: false, 
-              searchable: false,
-              render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
-              }
+              searchable: false
             },
             { targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], className: 'text-center' }
           ],
@@ -316,12 +318,18 @@ if (!$result) {
           destroy: true, // Allow the table to be reinitialized
           processing: false,
           serverSide: false,
+          drawCallback: function(settings) {
+            console.log("Table drawn, rows:", settings.fnRecordsDisplay());
+          },
           dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
                '<"row"<"col-sm-12"tr>>' +
                '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'
         });
+        
+        console.log("Table initialized successfully");
+        
       } catch (error) {
-        console.log("DataTable initialization error:", error);
+        console.error("DataTable initialization error:", error);
       }
       
       // Auto-hide alerts after 5 seconds

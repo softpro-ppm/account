@@ -227,6 +227,7 @@ if (!$result) {
             <tbody>
               <?php
               if ($result && $result->num_rows > 0) {
+                  $serial_no = 1;
                   while ($row = $result->fetch_assoc()) {
                       $formatted_date = date("d-m-Y", strtotime($row['date']));
                       $formatted_created_at = date("d-m-Y H:i:s", strtotime($row['created_at']));
@@ -236,7 +237,7 @@ if (!$result) {
                           : "<span class='badge bg-danger'><i class='bi bi-x-circle'></i> Pending</span>";
 
                       echo "<tr>";
-                      echo "<td></td>";
+                      echo "<td>" . $serial_no . "</td>";
                       echo "<td>" . htmlspecialchars($formatted_date) . "</td>";
                       echo "<td>" . htmlspecialchars($row['name']) . "</td>";
                       echo "<td>" . htmlspecialchars($row['phone']) . "</td>";
@@ -252,9 +253,10 @@ if (!$result) {
                               <a href='include/delete-income.php?id=" . $row['id'] . "' class='btn btn-sm btn-danger' onclick='return confirm(\"Are you sure you want to delete this record?\")'><i class='bi bi-trash'></i></a>
                             </td>";
                       echo "</tr>";
+                      $serial_no++;
                   }
               } else {
-                  echo "<tr><td colspan='15' class='text-center'>No records found</td></tr>";
+                  echo "<tr><td colspan='12' class='text-center'>No records found</td></tr>";
               }
               ?>
             </tbody>
@@ -274,9 +276,12 @@ if (!$result) {
     $.fn.dataTable.ext.errMode = 'none';
     
     $(document).ready(function() {
+      console.log("Initializing income table...");
+      
       try {
         // Destroy the table if it's already initialized
         if ($.fn.DataTable.isDataTable('#incomeTable')) {
+          console.log("Destroying existing table...");
           $('#incomeTable').DataTable().destroy();
         }
         
@@ -289,14 +294,14 @@ if (!$result) {
             { 
               targets: 0,
               searchable: false,
-              orderable: false,
-              render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
-              }
+              orderable: false
             },
             { orderable: false, targets: 11 } // Action column
           ],
           pageLength: 10,
+          drawCallback: function(settings) {
+            console.log("Table drawn, rows:", settings.fnRecordsDisplay());
+          },
           dom: '<"top"lf>rt<"bottom"ip><"clear">',
           language: {
             lengthMenu: "_MENU_ records per page",
@@ -313,8 +318,11 @@ if (!$result) {
             }
           }
         });
+        
+        console.log("Table initialized successfully");
+        
       } catch (error) {
-        console.log("DataTable initialization error:", error);
+        console.error("DataTable initialization error:", error);
       }
       
       // Auto-hide alerts after 5 seconds
